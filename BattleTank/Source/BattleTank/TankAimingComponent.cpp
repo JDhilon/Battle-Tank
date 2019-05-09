@@ -22,9 +22,14 @@ void UTankAimingComponent::BeginPlay()
 	
 }
 
-void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
 	Barrel = BarrelToSet;
+}
+
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+	Turret = TurretToSet;
 }
 
 
@@ -50,16 +55,23 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float LaunchSpeed)
 		StartLocation,
 		AimLocation,
 		LaunchSpeed,
+		false,
+		0,
+		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	);
 
 	if (bHaveAimSolution) {
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal(); // Unit vector of where to aim to hit target 
 
-		UE_LOG(LogTemp, Warning, TEXT("Aiming at %s"), *AimDirection.ToString())
+		MoveBarrelTowards(AimDirection);
 
-		// Move turret left or right to match up with x-y
-		// Move barrel up or down to match up with z
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("Solution found at time: %f"), Time)
+	}
+	else {
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("No solution found at time: %f"), Time)
 	}
 }
 
@@ -70,5 +82,6 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotation = AimAsRotator - BarrelRotator;
 	// move the barrel the correct amount this frame 
-	// TODO Create barrel C++ class to control barrel elevation speed and max elevation
+	Barrel->Elevate(DeltaRotation.Pitch); 
+	Turret->Rotate(DeltaRotation.Yaw); 
 }

@@ -24,9 +24,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	// Gets a reference to the tank controlled by the AI
-	ATank* GetControlledTank() const;
 
-	// Gets a reference to the tank controlled by the player
-	ATank* GetPlayerTank() const;
 };

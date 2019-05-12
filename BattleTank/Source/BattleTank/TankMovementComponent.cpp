@@ -29,7 +29,13 @@ void UTankMovementComponent::IntendRotateClockwise(float Throw)
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
 	// No need to call super as we are entirely replacing the functionality
-	auto TankName = GetOwner()->GetName();
-	auto MoveVelocityString = MoveVelocity.ToString();
-	UE_LOG(LogTemp, Warning, TEXT("%s vectoring to %s"), *TankName, *MoveVelocityString)
+
+	auto AIForwardIntention = MoveVelocity.GetSafeNormal();
+	auto TankForwardDirection = GetOwner()->GetActorForwardVector().GetSafeNormal();
+
+	auto ForwardThrow = FVector::DotProduct(AIForwardIntention, TankForwardDirection);
+	IntendMoveForward(ForwardThrow);
+
+	auto ClockwiseThrow = FVector::CrossProduct(TankForwardDirection, AIForwardIntention).Z;
+	IntendRotateClockwise(ClockwiseThrow);
 }

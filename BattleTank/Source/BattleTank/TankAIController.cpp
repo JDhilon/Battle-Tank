@@ -17,8 +17,15 @@ void ATankAIController::Tick(float DeltaTime)
 	ATank* PlayerTank = Cast<ATank>(PlayerPawn);
 	ATank* ControlledTank = Cast<ATank>(GetPawn());
 
-	MoveToActor(PlayerTank, StopRadius); //TODO Check Radius is in CM
+	MoveToActor(
+		PlayerTank, 
+		1.f,
+		true,
+		true,
+		false,
+		0, 
+		true); //TODO Check Radius is in CM
 
 	ControlledTank->AimAt(PlayerTank->GetActorLocation());
-	//ControlledTank->Fire();
+	// ControlledTank->Fire();
 }

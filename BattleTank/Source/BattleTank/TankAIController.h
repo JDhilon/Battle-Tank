@@ -24,5 +24,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-
+	UPROPERTY(EditDefaultsOnly)
+	float StopRadius = 3000.0;
 };

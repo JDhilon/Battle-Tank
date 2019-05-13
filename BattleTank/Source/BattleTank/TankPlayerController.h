@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Tank.h"
 #include "Engine/World.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -26,10 +25,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	// Gets a reference to the tank controlled by the player
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	ATank* GetControlledTank() const;
-
 	UFUNCTION(BlueprintImplementableEvent, Category = Setup)
 	void FoundAimingComponent(UTankAimingComponent* AimingCompRef);
 

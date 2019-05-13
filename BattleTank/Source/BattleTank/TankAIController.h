@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Tank.h"
 #include "Engine/World.h"
 #include "CoreMinimal.h"
 #include "AIController.h"

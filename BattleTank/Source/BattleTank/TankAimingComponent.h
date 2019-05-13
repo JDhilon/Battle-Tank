@@ -30,16 +30,10 @@ public:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-	UPROPERTY(BlueprintReadOnly, Category = State)
-	EFiringState FiringState = EFiringState::Aiming;
-
-public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void FindFiringState();
 
 	// Aims at a specified FVector
 	void AimAt(FVector AimLocation); 
@@ -55,8 +49,21 @@ public:
 	// Returns reference to Barrel
 	UTankBarrel* GetBarrel();
 
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+	UPROPERTY(BlueprintReadOnly, Category = State)
+	EFiringState FiringState = EFiringState::Reloading;
+
+	// Previously was UPROPERTY(EditDefaultsOnly, Category = Setup) and private. Change back after fix to blueprint variables clearing bug
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
 private:
 	void MoveBarrelTowards(FVector AimDirection);
+
+	bool IsBarrelMoving();
 
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
@@ -67,8 +74,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ReloadTimeInSeconds = 3.0; // TODO Find sensible default
 
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	TSubclassOf<AProjectile> ProjectileBlueprint;
-
 	double LastFireTime = 0.0;
+
+	FVector AimDirection = FVector(0);
 };

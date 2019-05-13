@@ -10,26 +10,20 @@ void UTankMovementComponent::Initialise(UTankTrack* RightTrackToSet, UTankTrack*
 }
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
-	if (!LeftTrack || !RightTrack) { return; }
+	if (!ensure(LeftTrack && RightTrack)) { return; }
 	LeftTrack->SetThrottle(Throw);
 	RightTrack->SetThrottle(Throw);
-
-	// TODO Prevent double speed due to duplicate inputs (Triggers + LeftStick)
 }
 
 void UTankMovementComponent::IntendRotateClockwise(float Throw)
 {
-	if (!LeftTrack || !RightTrack) { return; }
+	if (!ensure(LeftTrack && RightTrack)) { return; }
 	LeftTrack->SetThrottle(Throw);
 	RightTrack->SetThrottle(-Throw);
-
-	// TODO Prevent double speed due to duplicate inputs (Triggers + LeftStick)
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
-	// No need to call super as we are entirely replacing the functionality
-
 	auto AIForwardIntention = MoveVelocity.GetSafeNormal();
 	auto TankForwardDirection = GetOwner()->GetActorForwardVector().GetSafeNormal();
 

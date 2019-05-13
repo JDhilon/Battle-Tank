@@ -19,18 +19,22 @@ class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent
 	
 public:
 
+	// Moves tank forward and backwards
 	UFUNCTION(BlueprintCallable, Category = Movement)
 	void IntendMoveForward(float Throw);
 
+	// Turns tank right and left 
 	UFUNCTION(BlueprintCallable, Category = Movement)
 	void IntendRotateClockwise(float Throw);
 
+	// Passes reference of left and right track
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void Initialise(UTankTrack* RightTrackToSet, UTankTrack* LeftTrackToSet);
 
+private:
+	// Called from the pathfinding logic by the AI Controller
 	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 
-private:
 	UTankTrack* LeftTrack = nullptr;
 	UTankTrack* RightTrack = nullptr;
 };

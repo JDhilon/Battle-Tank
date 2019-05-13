@@ -35,7 +35,10 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::FindFiringState()
 {
-	if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds) {
+	if (Ammo <= 0) {
+		FiringState = EFiringState::NoAmmo;
+	}
+	else if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds) {
 		FiringState = EFiringState::Reloading;
 	}
 	else if (IsBarrelMoving()) {
@@ -50,7 +53,7 @@ bool UTankAimingComponent::IsBarrelMoving()
 {
 	if (!ensure(Barrel)) { return false; }
 	// Barrel is moving if they are not equal and vice versa
-	return !(Barrel->GetForwardVector().Equals(AimDirection, 0.01));
+	return !(Barrel->GetForwardVector().Equals(AimDirection, LockedRadius));
 }
 
 void UTankAimingComponent::Initialise(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet)
@@ -99,20 +102,39 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotation = AimAsRotator - BarrelRotator;
-	// move the barrel the correct amount this frame 
+	// Move the barrel the correct amount this frame 
 	Barrel->Elevate(DeltaRotation.Pitch); 
-	Turret->Rotate(DeltaRotation.Yaw); 
+	// Ensure we take the shortest possible path
+	if (FMath::Abs(DeltaRotation.Yaw) > 180.f)
+	{
+		Turret->Rotate(- DeltaRotation.Yaw);
+	}
+	else {
+		Turret->Rotate(DeltaRotation.Yaw);
+	}
 }
 
 void UTankAimingComponent::Fire()
 {
 	if (!ensure(Barrel && ProjectileBlueprint)) { return; }
 
-	if (FiringState != EFiringState::Reloading) {
+	if (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming) {
 		FVector Location = Barrel->GetSocketLocation(FName("Projectile"));
 		auto Rotation = Barrel->GetSocketRotation(FName("Projectile"));
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Location, Rotation);
 		Projectile->LaunchProjectile(LaunchSpeed);
 		LastFireTime = FPlatformTime::Seconds();
+		Ammo = Ammo - 1;
 	}
 }
+
+EFiringState UTankAimingComponent::GetFiringState() const
+{
+	return FiringState;
+}
+
+int32 UTankAimingComponent::GetAmmo() const
+{
+	return Ammo;
+}
+

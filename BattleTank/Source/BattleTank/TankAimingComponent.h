@@ -14,7 +14,8 @@ enum class EFiringState : uint8
 {
 	Reloading,
 	Aiming,
-	Locked
+	Locked,
+	NoAmmo
 };
 
 class UTankBarrel; 
@@ -49,12 +50,23 @@ public:
 	// Returns reference to Barrel
 	UTankBarrel* GetBarrel();
 
+	// Returns firing state
+	EFiringState GetFiringState() const;
+
+	// Get Ammo remaining
+	int32 GetAmmo() const;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	// State of the firing component
 	UPROPERTY(BlueprintReadOnly, Category = State)
 	EFiringState FiringState = EFiringState::Reloading;
+
+	// Base ammo per tank
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Firing)
+	int32 Ammo = 20; //TODO Find sensible default
 
 	// Previously was UPROPERTY(EditDefaultsOnly, Category = Setup) and private. Change back after fix to blueprint variables clearing bug
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Setup)
@@ -69,12 +81,17 @@ private:
 	UTankTurret* Turret = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float LaunchSpeed = 8000.0; // TODO Find sensible default
+	float LaunchSpeed = 12000.0; // TODO Find sensible default
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ReloadTimeInSeconds = 3.0; // TODO Find sensible default
 
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float LockedRadius = 0.1; //TODO Find sensible default
+
 	double LastFireTime = 0.0;
 
 	FVector AimDirection = FVector(0);
+
+
 };

@@ -8,7 +8,7 @@
 #include "TankAIController.generated.h"
 
 /**
- * 
+ * Controls AI tanks movement and firing
  */
 UCLASS()
 class BATTLETANK_API ATankAIController : public AAIController
@@ -22,7 +22,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// How far from player tank the AI tank stops
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	float StopRadius = 8000.0;
+
 private:
-	UPROPERTY(EditDefaultsOnly)
-	float StopRadius = 3000.0;
+	// Used to initialize broadcast for death
+	virtual void SetPawn(APawn *InPawn) override;
+
+	// On death handler
+	UFUNCTION()
+	void OnPossessedTankDeath();
+
 };

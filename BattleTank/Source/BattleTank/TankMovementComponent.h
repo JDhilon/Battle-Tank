@@ -35,6 +35,9 @@ private:
 	// Called from the pathfinding logic by the AI Controller
 	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 
+	// Reference to left track of tank
 	UTankTrack* LeftTrack = nullptr;
+
+	// Reference to right track of tank
 	UTankTrack* RightTrack = nullptr;
 };

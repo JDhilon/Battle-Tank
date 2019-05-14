@@ -8,7 +8,7 @@
 #include "TankTrack.generated.h"
 
 /**
- * 
+ * Class controlling tracks of the tanks. Used for movement
  */
 UCLASS( ClassGroup = (Custom), meta = (BlueprintSpawnableComponent) )
 class BATTLETANK_API UTankTrack : public UStaticMeshComponent
@@ -40,5 +40,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	float TrackMaxDrivingForce = 40000000.0; // Assume 40 tonne tank and 1g acceleration
 
+	// Current throttle being applied to the track
 	float CurrentThrottle = 0.0;
 };

@@ -25,7 +25,7 @@ void ATankAIController::Tick(float DeltaTime)
 		true,
 		false,
 		0, 
-		true); //TODO Check Radius is in CM
+		true);
 
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	AimingComponent->AimAt(PlayerTank->GetActorLocation());

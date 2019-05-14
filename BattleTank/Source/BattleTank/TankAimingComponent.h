@@ -22,6 +22,9 @@ class UTankBarrel;
 class UTankTurret;
 class AProjectile;
 
+/**
+* Class responsible for aiming player and AI tank barrels and firing projectiles
+*/
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANK_API UTankAimingComponent : public UActorComponent
 {
@@ -66,31 +69,41 @@ protected:
 
 	// Base ammo per tank
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Firing)
-	int32 Ammo = 20; //TODO Find sensible default
+	int32 Ammo = 20; 
 
 	// Previously was UPROPERTY(EditDefaultsOnly, Category = Setup) and private. Change back after fix to blueprint variables clearing bug
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 private:
+	// Adjust barrel and turret rotations to face a spoecified vector
 	void MoveBarrelTowards(FVector AimDirection);
 
+	// Returns if barrel is currently moving/adjusting aim
 	bool IsBarrelMoving();
 
+	// Reference to barrel of tank
 	UTankBarrel* Barrel = nullptr;
+
+	// Reference to turret of tank
 	UTankTurret* Turret = nullptr;
 
+	// Speed projectile is launched at, used for firing and aim calculations
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float LaunchSpeed = 12000.0; // TODO Find sensible default
+	float LaunchSpeed = 12000.0; 
 
+	// Time in between shots
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float ReloadTimeInSeconds = 3.0; // TODO Find sensible default
+	float ReloadTimeInSeconds = 3.0; 
 
+	// How far the barrel has to be from the target to be considered locked on
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float LockedRadius = 0.1; //TODO Find sensible default
+	float LockedRadius = 0.1; 
 
+	// Time last fired. Used for reload calculations
 	double LastFireTime = 0.0;
 
+	// Direction the barrel is currently aiming. Used for BarrelMoving calculations
 	FVector AimDirection = FVector(0);
 
 

@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SceneComponent.h"
 #include "Engine/World.h"
 #include "TankTrack.generated.h"
+
+class ASprungWheel;
 
 /**
  * Class controlling tracks of the tanks. Used for movement
@@ -19,27 +22,22 @@ public:
 	// Sets default values for this component's properties
 	UTankTrack();
 
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-	// OnHit delegate function
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
-
-	// Limits the slippage of the tank, forcing a straigh drive path
-	void PreventSidewaysSlip();
-
 	// Sets a throttle between -1.0 and 1.0
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 
 	// Moves track at current throttle
-	void DriveTrack();
+	void DriveTrack(float CurrentThrottle);
 
 	// Max force per track in Newtons
 	UPROPERTY(EditDefaultsOnly)
 	float TrackMaxDrivingForce = 40000000.0; // Assume 40 tonne tank and 1g acceleration
 
-	// Current throttle being applied to the track
-	float CurrentThrottle = 0.0;
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+private:
+	// Returns all wheels attached to track
+	TArray<ASprungWheel*> GetWheels() const;
 };

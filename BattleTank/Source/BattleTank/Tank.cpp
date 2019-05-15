@@ -15,7 +15,6 @@ void ATank::BeginPlay()
 	Super::BeginPlay();
 
 	CurrentHealth = StartingHealth;
-	UE_LOG(LogTemp, Warning, TEXT("CurrentHealth = %i"), CurrentHealth)
 }
 
 // Called to bind functionality to input

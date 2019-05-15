@@ -34,4 +34,7 @@ private:
 	UFUNCTION()
 	void OnPossessedTankDeath();
 
+	// Aims AI tanks and Fires if locked on target
+	void AimAndFire();
+
 };
